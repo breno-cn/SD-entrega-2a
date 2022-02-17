@@ -9,7 +9,7 @@ from Hashtable import Hashtable
 
 from concurrent import futures
 
-print(os.getpid())
+print(f'server pid: {os.getpid()}')
 
 def calculateFingerTable(_signum, _frame):
     global serverServicer
@@ -34,7 +34,6 @@ def getHash(key: str):
 
 def ping(address: str) -> bool:
     response = None
-    print(address)
     try:
         channel = grpc.insecure_channel(address)
         stub = ServerStub(channel)
