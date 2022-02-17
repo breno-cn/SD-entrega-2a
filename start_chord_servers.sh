@@ -16,7 +16,7 @@ M=$1
 serversNum=$2
 maxNodes=$(echo "2^$M" | bc)
 
-echo "Subira $serversNum servidores numa rede que usara $M bits para a hash"
+echo "Subirao $serversNum servidores numa rede que usara $M bits para a hash"
 
 declare -A serverPids
 for i in $(seq 1 $serversNum); do

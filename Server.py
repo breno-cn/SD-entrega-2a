@@ -55,16 +55,6 @@ class Server(ServerServicer):
         self.m = m                      # ammount of bits used by the hash function, also determinate the max network size
         self.fingerTable = [0] * self.m
         self.maxNodes = (2 ** self.m) + 1
-        # self.fingerTable = [self.succ(self.id + (2 ** (i - 1))) for i in range(self.maxServers)]
-
-        # print(self.fingerTable)
-        # print(self.succ(self.id))
-
-
-    # def shouldIProcess(self, key: str) -> bool:
-    #    result = getHash(key) % self.maxId
-    #    
-    #    return (result - self.maxServers) < result < (result + self.maxServers)
 
     def succ(self, addr: int):
         currentAddr = addr + 1
@@ -80,9 +70,8 @@ class Server(ServerServicer):
         for i in range(self.m):
             self.fingerTable[i] = self.succ(((self.n + (2 ** (i))) % self.maxNodes))
 
-        print(f'finger table: {self.fingerTable}')
+        print(f'process {self.n} finger table: {self.fingerTable}')
 
-# server = Server(300, 'localhost', 5, 455)
 n = int(sys.argv[1])
 m = int(sys.argv[2])
 serverServicer = Server(n, 'localhost', m)
