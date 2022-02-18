@@ -58,11 +58,9 @@ class Server(ServerServicer):
 
     def getResponsibleNode(self, key: str):
         result = getHash(key) % self.maxNodes
-        print(f'key: {key}, hash: {result}')
 
         for i in range(len(self.fingerTable)):
             if self.fingerTable[i] > result:
-                print('found a possible responsible node')
                 possibleResponsible = self.fingerTable[0] if i == 0 else self.fingerTable[i - 1]
                 return self.n if abs(self.n - result) < abs(possibleResponsible - result) else possibleResponsible
 
@@ -86,82 +84,56 @@ class Server(ServerServicer):
         key = request.key
         value = request.value
 
-        print(f'key: {key}, value: {value}')
         node = self.getResponsibleNode(key)
 
         print(f'responsible node: {node}')
 
         if node == self.n:
-            print('I am responsible')
             print(key, value, sep='\t')
             status = self.hashtable.create(key, value)
             return Response(status=status)
 
         with grpc.insecure_channel(f'localhost:{node}') as channel:
-            print('Why can\'t someone else do it?')
             stub = ServerStub(channel)
-            print('a')
-            try:
-                print('b')
-                return stub.create(Request(key=key, value=value))
-            except Exception as e:
-                print(f'found the error: {e}')
+            return stub.create(Request(key=key, value=value))
 
     def read(self, request, context):
         key = request.key
 
-        print(f'key: {key}')
         node = self.getResponsibleNode(key)
 
         print(f'responsible node: {node}')
 
         if node == self.n:
-            print('I am responsible')
             response = self.hashtable.read(key)
             if type(response) == str:
                 return Response(status=4, value=response)
             return Response(status=5)
-            #return Response(status=status, value=value)
 
         with grpc.insecure_channel(f'localhost:{node}') as channel:
-            print('Why can\'t someone else do it?')
             stub = ServerStub(channel)
-            print('a')
-            try:
-                print('b')
-                return stub.read(Request(key=key))
-            except Exception as e:
-                print(f'found the error: {e}')
+            return stub.read(Request(key=key))
 
     def update(self, request, context):
         key = request.key
         value = request.value
 
-        print(f'key: {key}, value: {value}')
         node = self.getResponsibleNode(key)
 
         print(f'responsible node: {node}')
 
         if node == self.n:
-            print('I am responsible')
             print(key, value, sep='\t')
             status = self.hashtable.update(key, value)
             return Response(status=status, value=value)
 
         with grpc.insecure_channel(f'localhost:{node}') as channel:
-            print('Why can\'t someone else do it?')
             stub = ServerStub(channel)
-            print('a')
-            try:
-                print('b')
-                return stub.update(Request(key=key, value=value))
-            except Exception as e:
-                print(f'found the error: {e}')
+            return stub.update(Request(key=key, value=value))
 
     def delete(self, request, context):
         key = request.key
 
-        print(f'key: {key}')
         node = self.getResponsibleNode(key)
 
         print(f'responsible node: {node}')
@@ -171,14 +143,8 @@ class Server(ServerServicer):
             return Response(status=status)
 
         with grpc.insecure_channel(f'localhost:{node}') as channel:
-            print('Why can\'t someone else do it?')
             stub = ServerStub(channel)
-            print('a')
-            try:
-                print('b')
-                return stub.delete(Request(key=key))
-            except Exception as e:
-                print(f'found the error: {e}')
+            return stub.delete(Request(key=key))
 
 
 n = int(sys.argv[1])
