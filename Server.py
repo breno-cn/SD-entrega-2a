@@ -58,11 +58,14 @@ class Server(ServerServicer):
 
     def getResponsibleNode(self, key: str):
         result = getHash(key) % self.maxNodes
+        print(result)
 
         for i in range(len(self.fingerTable)):
             if self.fingerTable[i] > result:
                 possibleResponsible = self.fingerTable[0] if i == 0 else self.fingerTable[i - 1]
                 return self.n if abs(self.n - result) < abs(possibleResponsible - result) else possibleResponsible
+
+        return self.n
 
     def succ(self, addr: int):
         currentAddr = addr + 1
