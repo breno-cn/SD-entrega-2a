@@ -2,13 +2,18 @@ from PageServer_pb2 import FindRequest
 from PageServer_pb2_grpc import PageStub
 
 import grpc
+import sys
 from Storage_pb2 import Request
 
 from Storage_pb2_grpc import StorageStub
 
-PAGE_SERVER_ADDRESS = 'localhost:50051'
+PAGE_SERVER_ADDRESS = 'localhost:' + str(sys.argv[1])
+
+print(PAGE_SERVER_ADDRESS)
 
 with grpc.insecure_channel(PAGE_SERVER_ADDRESS) as channel:
+    
+
     pageStub = PageStub(channel)
 
     while True:
