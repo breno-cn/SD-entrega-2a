@@ -28,8 +28,6 @@ for i in $(seq 1 $serversNum); do
     serverPids[$i]=$serverPid
 done
 
-echo "pids dos servidores: ${serverPids}, ${serverPids[2]}"
-
 WAIT_FOR_IT
 
 for i in $(seq 1 $serversNum); do
@@ -39,5 +37,6 @@ done
 WAIT_FOR_IT
 
 for i in $(seq 1 $serversNum); do
+    echo "Matando servidor de pid ${serverPids[$i]}"
     kill -9 ${serverPids[$i]}
 done
